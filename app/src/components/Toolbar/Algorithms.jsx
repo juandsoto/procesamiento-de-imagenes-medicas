@@ -1,5 +1,5 @@
-import useStore from "../store";
-import GlowingButton from './GlowingButton';
+import useStore from "../../store";
+import GlowingButton from '../GlowingButton';
 
 function Algorithms() {
 
@@ -13,30 +13,34 @@ function Algorithms() {
 				disabled={ mustBeDisabled }
 				className={ selectedAlgorithm !== 'thresholding' ? 'opacity-50' : '' }
 				color="cyan"
-				text='Thresholding'
 				onClick={ () => setSelectedAlgorithm('thresholding') }
-			/>
+			>
+				Thresholding
+			</GlowingButton>
 			<GlowingButton
 				disabled={ mustBeDisabled }
 				className={ selectedAlgorithm !== 'isodata' ? 'opacity-50' : '' }
 				color="teal"
-				text='Isodata'
 				onClick={ () => setSelectedAlgorithm('isodata') }
-			/>
+			>
+				Isodata
+			</GlowingButton>
 			<GlowingButton
 				disabled={ mustBeDisabled }
 				className={ selectedAlgorithm !== 'kmeans' ? 'opacity-50' : '' }
 				color="purple"
-				text='K-means'
 				onClick={ () => setSelectedAlgorithm('kmeans') }
-			/>
+			>
+				K-means
+			</GlowingButton>
 			<GlowingButton
 				disabled={ mustBeDisabled }
 				className={ selectedAlgorithm !== 'region_growing' ? 'opacity-50' : '' }
 				color="green"
-				text='Region growing'
 				onClick={ () => setSelectedAlgorithm('region_growing') }
-			/>
+			>
+				Region growing
+			</GlowingButton>
 		</div>
 	);
 }

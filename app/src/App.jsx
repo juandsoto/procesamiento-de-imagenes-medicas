@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DropZone from "./components/DropZone";
-import Toolbar from "./components/Toolbar";
+import Toolbar from "./components/Toolbar/Toolbar";
 import ImageViewer from "./components/ImageViewer";
 import useStore from "./store";
 

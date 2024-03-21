@@ -5,10 +5,11 @@ const colorClasses = {
 	teal: 'from-teal-400 via-teal-500 to-teal-600 focus:ring-teal-300 dark:focus:ring-teal-800 shadow-teal-500/50 dark:shadow-teal-800/80',
 	purple: 'from-purple-400 via-purple-500 to-purple-600 focus:ring-purple-300 dark:focus:ring-purple-800 shadow-purple-500/50 dark:shadow-purple-800/80',
 	green: 'from-green-400 via-green-500 to-green-600 focus:ring-green-300 dark:focus:ring-green-800 shadow-green-500/50 dark:shadow-green-800/80',
+	red: 'from-red-400 via-red-500 to-red-600 focus:ring-red-300 dark:focus:ring-red-800 shadow-red-500/50 dark:shadow-red-800/80'
 	// Add more colors as needed
 };
 
-function GlowingButton({ className = '', color, text, disabled, onClick }) {
+function GlowingButton({ className = '', color, children, disabled, onClick }) {
 	const colorClass = colorClasses[color] || '';
 	return (
 		<button
@@ -20,7 +21,7 @@ function GlowingButton({ className = '', color, text, disabled, onClick }) {
 				colorClass,
 				className
 			].join(' ') }>
-			{ text }
+			{ children }
 		</button>
 	);
 }

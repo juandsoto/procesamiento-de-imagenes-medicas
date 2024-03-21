@@ -1,8 +1,9 @@
 import React from 'react';
-import useStore from '../store';
+import useStore from '../../store';
 import Algorithms from './Algorithms';
 import Attributes from './Attributes';
 import Run from './Run';
+import Draw from './Draw';
 
 function Toolbar({ className = '', onClose }) {
 	const { originalImage, selectedAlgorithm, reset } = useStore();
@@ -21,8 +22,13 @@ function Toolbar({ className = '', onClose }) {
 					</button>
 				</div>
 				<Algorithms />
-				<Attributes />
-				{ selectedAlgorithm && <Run /> }
+				{ selectedAlgorithm && (
+					<>
+						<Draw />
+						<Attributes />
+						<Run />
+					</>
+				) }
 			</div>
 			{ originalImage && (
 				<button

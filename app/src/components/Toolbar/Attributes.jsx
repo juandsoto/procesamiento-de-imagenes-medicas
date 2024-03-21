@@ -1,6 +1,6 @@
 import React from 'react';
-import useStore from '../store';
-import Slider from './Slider';
+import useStore from '../../store';
+import Slider from '../Slider';
 
 function Attributes() {
 	const { selectedAlgorithm } = useStore();

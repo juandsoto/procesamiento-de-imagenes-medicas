@@ -9,6 +9,12 @@ const useStore = create((set) => ({
 	setIsProcessing: (value) => set((_) => ({ isProcessing: value })),
 	selectedAlgorithm: null,
 	setSelectedAlgorithm: (algorithm) => set((_) => ({ selectedAlgorithm: algorithm })),
+	drawing: {
+		isActive: false,
+		color: 'green'
+	},
+	setDrawingColor: (color) => set((state) => ({ drawing: { ...state.drawing, color } })),
+	toggleDrawing: () => set((state) => ({ drawing: { ...state.drawing, isActive: !state.drawing.isActive } })),
 	reset: () => set((_) => ({
 		originalImage: null,
 		resultImage: null,

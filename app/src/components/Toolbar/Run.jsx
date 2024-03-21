@@ -1,7 +1,7 @@
 import React from 'react';
-import NiftiReader from "../classes/NiftiReader";
-import useStore from '../store';
-import { wait } from "../utils";
+import NiftiReader from "../../classes/NiftiReader";
+import useStore from '../../store';
+import { wait } from "../../utils";
 
 function Run() {
 	const { isProcessing, setIsProcessing, originalImage, setResultImage, selectedAlgorithm, algorithms } = useStore();
