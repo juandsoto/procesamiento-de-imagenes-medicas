@@ -1,0 +1,16 @@
+node_modules
+
+
+#PYTHON
+.idea/
+.vscode/
+__pycache__/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+docs/_build/
+dist/
+.venv/
+
+api/uploads/*
