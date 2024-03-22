@@ -20,15 +20,22 @@ const useStore = create((set) => ({
 		resultImage: null,
 		isProcessing: false,
 		selectedAlgorithm: null,
+		drawing: { isActive: false, color: 'green' }
 	})),
 	algorithms: {
 		'thresholding': 150,
 		'isodata': 100,
 		'kmeans': 5,
-		'region_growing': 100,
+		'region_growing': {
+			'threshold': 20,
+			'points': null
+		},
 	},
 	setAlgorithmValue: (algorithm, value) => set((state) => ({
 		algorithms: { ...state.algorithms, [algorithm]: value }
+	})),
+	setRegionGrowing: (props) => set((state) => ({
+		algorithms: { ...state.algorithms, 'region_growing': { ...state.algorithms.region_growing, ...props } }
 	}))
 }));
 

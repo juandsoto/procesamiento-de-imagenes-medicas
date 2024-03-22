@@ -71,17 +71,17 @@ function KmeansAttributes() {
 }
 
 function RegionGrowingAttributes() {
-	const { setAlgorithmValue, algorithms } = useStore();
+	const { setAlgorithmValue, algorithms, setRegionGrowing } = useStore();
 
 	return (
 		<div>
-			<label htmlFor="region_growing-attribute">Threshold { algorithms['region_growing'] }</label>
+			<label htmlFor="region_growing-attribute">Threshold { algorithms['region_growing'].threshold }</label>
 			<Slider
 				id="region_growing-attribute"
 				min={ 1 }
 				max={ 300 }
-				value={ algorithms['region_growing'] }
-				onChange={ (e) => setAlgorithmValue('region_growing', e.target.value) }
+				value={ algorithms['region_growing'].threshold }
+				onChange={ (e) => setRegionGrowing({ 'threshold': e.target.value }) }
 			/>
 		</div>
 	);

@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, make_response
 from flask_cors import CORS
 import nibabel as nib
 import numpy as np
@@ -43,13 +43,12 @@ def upload_file():
         if algorithm == "thresholding":
             segmentation_result = umbralizacion(nii_image, data["tau"])
         elif algorithm == "isodata":
-            segmentation_result = isodata(nii_image, data["tau"])
+            segmentation_result = isodata(nii_image, 0.001)
         elif algorithm == "kmeans":
             segmentation_result = kmeans(nii_image, data["k"])
         elif algorithm == "region_growing":
-            seed_point = (data["x"], data["y"], data["z"])
             segmentation_result = region_growing(
-                nii_image, seed_point, data["threshold"]
+                nii_image, data["threshold"], data["slice"], data["points"]
             )
 
         segmented_image = segmentation_result
@@ -63,11 +62,13 @@ def upload_file():
 
         nib.save(new_nii_image, new_file)
 
-        return send_file(
+        response = send_file(
             new_file,
             as_attachment=True,
             download_name="segmentation_result.nii",
         )
+
+        return response
 
     except Exception as e:
         print("error", e)

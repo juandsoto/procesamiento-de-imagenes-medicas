@@ -10,7 +10,7 @@ function App() {
 
 	return (
 		<div className="min-h-screen flex items-stretch gap-8 max-w-screen-3xl mx-4 xl:mx-auto">
-			<div className="flex-1 space-y-8 mt-4 ml- xl:ml-8">
+			<div className="flex-1 space-y-8 mt-4 ml-0 xl:ml-8">
 				<div className="flex items-start justify-between gap-8">
 					<h1 className="text-2xl">Project</h1>
 					{ !isMobile && (

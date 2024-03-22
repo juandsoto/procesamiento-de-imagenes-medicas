@@ -13,7 +13,7 @@ function Run() {
 			const file = originalImage;
 			formData.append('file', file);
 
-			let payload = { algorithm: selectedAlgorithm };
+			let payload = { algorithm: selectedAlgorithm, slice: parseInt(document.getElementById('myRange-text').innerText) };
 			switch (selectedAlgorithm) {
 				case 'thresholding':
 					payload.tau = parseInt(algorithms['thresholding']);
@@ -25,17 +25,18 @@ function Run() {
 					payload.k = parseInt(algorithms['kmeans']);
 					break;
 				case 'region_growing':
-					// payload.x = Tools.region_growing.x;
-					// payload.y = Tools.region_growing.y;
-					// payload.z = Tools.region_growing.z;
-					// payload.threshold = Tools.region_growing.threshold;
+					payload.points = algorithms['region_growing'].points;
+					payload.threshold = parseInt(algorithms['region_growing'].threshold);
 					break;
 			}
 			formData.append('data', JSON.stringify(payload));
 
 			const response = await fetch('http://localhost:5000/upload', {
 				method: 'POST',
-				body: formData
+				body: formData,
+				headers: {
+					'Accept': '*/*'
+				}
 			});
 
 			const blob = await response.blob();
@@ -45,7 +46,7 @@ function Run() {
 
 			await wait(500);
 
-			const niftiReader = new NiftiReader('myCanvasResult', 'myRangeResult');
+			const niftiReader = new NiftiReader('myCanvasResult', 'myRangeResult', parseInt(document.getElementById('myRange-text').innerText));
 
 			niftiReader.readFile(file, blob);
 		} catch (error) {
