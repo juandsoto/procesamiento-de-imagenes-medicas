@@ -49,8 +49,7 @@ function Run() {
 			});
 
 			const blob = await response.blob();
-
-			setResultImage(blob);
+			setResultImage(new Blob([blob]));
 			setIsProcessing(false);
 
 			await wait(500);

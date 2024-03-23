@@ -4,9 +4,10 @@ import Algorithms from './Algorithms';
 import Attributes from './Attributes';
 import Run from './Run';
 import Draw from './Draw';
+import Download from './Download';
 
 function Toolbar({ className = '', onClose }) {
-	const { originalImage, selectedAlgorithm, reset } = useStore();
+	const { originalImage, resultImage, drawing, selectedAlgorithm, reset } = useStore();
 
 	return (
 		<div className={ ["flex flex-col bg-secondary w-96 px-4 py-8 space-y-4", className].join(' ') }	>
@@ -35,6 +36,12 @@ function Toolbar({ className = '', onClose }) {
 						<Run />
 					</>
 				) }
+				<div className='flex items-center justify-end gap-2'>
+					{ (originalImage && (drawing.points.length > 0 || drawing.pointsToRemove.length > 0)) && (
+						<Download text="annotation" filename={ originalImage.name } file={ originalImage } />
+					) }
+					{ resultImage && <Download text="result" filename={ `${originalImage.name.split('.')[0]}_result.nii` } file={ resultImage } /> }
+				</div>
 			</div>
 			{ originalImage && (
 				<button
