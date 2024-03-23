@@ -55,7 +55,7 @@ def kmeans(image_data, k):
     return segmentation
 
 
-def region_growing(image_data, threshold, slice, points):
+def region_growing(image_data, threshold, slice, points, pointsToRemove):
     image3d = image_data.get_fdata()
     # Get image dimensions
     height_x, width_y, depth_z = image3d.shape
@@ -69,8 +69,12 @@ def region_growing(image_data, threshold, slice, points):
     # Define 3d 6-connectivity neighbors
     # center is (0,0,0)
     neighbors6 = [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+
     starting_tuples = [(x, y) for x, y in points]
     starting_triples = []
+
+    ignore_tuples = [(x, y) for x, y in pointsToRemove]
+    ignore_triples = []
 
     visited_tuples = []
     visited_triples = []
@@ -79,6 +83,8 @@ def region_growing(image_data, threshold, slice, points):
     # and setting the selection plane depending on how it was shown to the user
     visited_triples = [(x, y, slice) for x, y in visited_tuples]
     starting_triples = [(x, y, slice) for x, y in starting_tuples]
+    ignore_triples = [(x, y, slice) for x, y in ignore_tuples]
+
     for x, y, z in visited_triples:
         visited_3dmask[x, y, z] = True
 
@@ -88,6 +94,9 @@ def region_growing(image_data, threshold, slice, points):
     seed_value = 0
     while stack:
         x, y, z = stack.pop()
+        if (x, y) in ignore_tuples:
+            continue
+
         segmented_3dimage[x, y, z] = 255  # Mark pixel as part of the segmented region
         visited_3dmask[x, y, z] = True  # Mark pixel as visited
 

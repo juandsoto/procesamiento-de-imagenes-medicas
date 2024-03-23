@@ -8,8 +8,6 @@ function Attributes() {
 	switch (selectedAlgorithm) {
 		case 'thresholding':
 			return <ThresholdingAttributes />;
-		case 'isodata':
-			return <IsodataAttributes />;
 		case 'kmeans':
 			return <KmeansAttributes />;
 		case 'region_growing':
@@ -36,23 +34,6 @@ function ThresholdingAttributes() {
 	);
 }
 
-function IsodataAttributes() {
-	const { setAlgorithmValue, algorithms } = useStore();
-
-	return (
-		<div>
-			<label htmlFor="isodata-attribute">Threshold { algorithms['isodata'] }</label>
-			<Slider
-				id="isodata-attribute"
-				min={ 1 }
-				max={ 300 }
-				value={ algorithms['isodata'] }
-				onChange={ (e) => setAlgorithmValue('isodata', e.target.value) }
-			/>
-		</div>
-	);
-}
-
 function KmeansAttributes() {
 	const { setAlgorithmValue, algorithms } = useStore();
 
@@ -71,17 +52,17 @@ function KmeansAttributes() {
 }
 
 function RegionGrowingAttributes() {
-	const { setAlgorithmValue, algorithms, setRegionGrowing } = useStore();
+	const { setAlgorithmValue, algorithms } = useStore();
 
 	return (
 		<div>
-			<label htmlFor="region_growing-attribute">Threshold { algorithms['region_growing'].threshold }</label>
+			<label htmlFor="region_growing-attribute">Threshold { algorithms['region_growing'] }</label>
 			<Slider
 				id="region_growing-attribute"
 				min={ 1 }
 				max={ 300 }
-				value={ algorithms['region_growing'].threshold }
-				onChange={ (e) => setRegionGrowing({ 'threshold': e.target.value }) }
+				value={ algorithms['region_growing'] }
+				onChange={ (e) => setAlgorithmValue('region_growing', e.target.value) }
 			/>
 		</div>
 	);

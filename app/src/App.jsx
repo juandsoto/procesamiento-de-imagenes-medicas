@@ -6,24 +6,25 @@ import useStore from "./store";
 
 function App() {
 	const [isMobile, setIsMobile] = useState(true);
-	const { originalImage, isProcessing, resultImage } = useStore();
+	const { originalImage, isProcessing, resultImage, drawing } = useStore();
 
 	return (
 		<div className="min-h-screen flex items-stretch gap-8 max-w-screen-3xl mx-4 xl:mx-auto">
 			<div className="flex-1 space-y-8 mt-4 ml-0 xl:ml-8">
-				<div className="flex items-start justify-between gap-8">
-					<h1 className="text-2xl">Project</h1>
-					{ !isMobile && (
-						<button className="xl:hidden w-8" onClick={ () => setIsMobile(true) }>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar-right-expand">
-								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-								<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-								<path d="M15 4v16" />
-								<path d="M10 10l-2 2l2 2" />
-							</svg>
-						</button>
-					) }
+				<div className="flex items-center justify-center gap-2">
+					<img src="/logo.png" alt="logo" width={ 64 } />
+					<h1 className="text-2xl capitalize">Medical image processing</h1>
 				</div>
+				{ !isMobile && (
+					<button className="xl:hidden w-8 absolute top-0 right-4" onClick={ () => setIsMobile(true) }>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar-right-expand">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+							<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
+							<path d="M15 4v16" />
+							<path d="M10 10l-2 2l2 2" />
+						</svg>
+					</button>
+				) }
 				{ originalImage
 					? <ImageViewer canvasId="myCanvas" sliderId="myRange" />
 					: <DropZone />

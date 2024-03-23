@@ -5,20 +5,26 @@ function DrawingCanvas() {
 	const canvasRef = useRef(null);
 	const ctxRef = useRef(null);
 	const isDrawing = useRef(false);
-	const { drawing, setRegionGrowing } = useStore();
 	const pointsRef = useRef([]);
+	const pointsToRemoveRef = useRef([]);
+	const { drawing, addPointsToDrawing } = useStore();
 
 	const startDrawing = (e) => {
 		isDrawing.current = true;
 		ctxRef.current.beginPath();
-		draw(e);  // To start drawing immediately at the click position
+		draw(e);
 	};
 
 	const stopDrawing = () => {
-		// setIsDrawing(false);
 		isDrawing.current = false;
-		setRegionGrowing({ points: pointsRef.current });
-		ctxRef.current.closePath();  // Reset the drawing path
+		if (drawing.color === 'green') {
+			addPointsToDrawing('points', pointsRef.current);
+			pointsRef.current = [];
+		} else {
+			addPointsToDrawing('pointsToRemove', pointsToRemoveRef.current);
+			pointsToRemoveRef.current = [];
+		}
+		ctxRef.current.closePath();
 	};
 
 	const draw = (e) => {
@@ -31,16 +37,19 @@ function DrawingCanvas() {
 		ctx.lineWidth = 4;
 		ctx.lineCap = "round";
 
-		// Draw a line to the current mouse position
 		const rect = canvas.getBoundingClientRect();
 		const x = e.clientX - rect.left;
 		const y = e.clientY - rect.top;
-		pointsRef.current.push([Math.floor(x), Math.floor(y)]);
-		console.log(pointsRef.current);
+
+		if (drawing.color === 'green') {
+			pointsRef.current.push([Math.floor(x), Math.floor(y)]);
+		} else {
+			pointsToRemoveRef.current.push([Math.floor(x), Math.floor(y)]);
+		}
+
 		ctx.lineTo(x, y);
 		ctx.stroke();
 
-		// Start a new path for the next segment
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 	};
@@ -61,7 +70,7 @@ function DrawingCanvas() {
 			canvas.removeEventListener('mousemove', draw);
 			canvas.removeEventListener('mouseout', stopDrawing);
 		};
-	}, []);
+	}, [drawing.color]);
 
 	return (
 		<canvas id="drawingCanvas" ref={ canvasRef } className='absolute top-0 left-0 w-full h-full' width={ 100 } height={ 100 } />

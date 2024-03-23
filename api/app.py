@@ -43,12 +43,16 @@ def upload_file():
         if algorithm == "thresholding":
             segmentation_result = umbralizacion(nii_image, data["tau"])
         elif algorithm == "isodata":
-            segmentation_result = isodata(nii_image, 0.001)
+            segmentation_result = isodata(nii_image, 1)
         elif algorithm == "kmeans":
             segmentation_result = kmeans(nii_image, data["k"])
         elif algorithm == "region_growing":
             segmentation_result = region_growing(
-                nii_image, data["threshold"], data["slice"], data["points"]
+                nii_image,
+                data["threshold"],
+                data["slice"],
+                data["points"],
+                data["pointsToRemove"],
             )
 
         segmented_image = segmentation_result

@@ -10,7 +10,6 @@ class NiftiReader {
 		this.sliderText = document.getElementById(`${sliderId}-text`);
 
 		this.defaultSlice = slice;
-		console.log({ slice });
 
 		this.readNIFTI = this.readNIFTI.bind(this);
 	}
