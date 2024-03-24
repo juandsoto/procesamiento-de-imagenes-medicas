@@ -69,7 +69,7 @@ def upload_file():
         response = send_file(
             new_file,
             as_attachment=True,
-            download_name="segmentation_result.nii",
+            download_name=file.filename + "_result.nii",
         )
 
         return response

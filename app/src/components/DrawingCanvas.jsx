@@ -7,11 +7,11 @@ function DrawingCanvas() {
 	const isDrawing = useRef(false);
 	const pointsRef = useRef([]);
 	const pointsToRemoveRef = useRef([]);
-	const { drawing, addPointsToDrawing } = useStore();
+	const { drawing, addPointsToDrawing, originalReader } = useStore();
 
 	const startDrawing = (e) => {
 		isDrawing.current = true;
-		ctxRef.current.beginPath();
+		// ctxRef.current.beginPath();
 		draw(e);
 	};
 
@@ -24,18 +24,18 @@ function DrawingCanvas() {
 			addPointsToDrawing('pointsToRemove', pointsToRemoveRef.current);
 			pointsToRemoveRef.current = [];
 		}
-		ctxRef.current.closePath();
+		// ctxRef.current.closePath();
 	};
 
 	const draw = (e) => {
 		if (!isDrawing.current) return;
 
 		const canvas = canvasRef.current;
-		const ctx = ctxRef.current;
+		// const ctx = ctxRef.current;
 
-		ctx.strokeStyle = drawing.color;
-		ctx.lineWidth = 4;
-		ctx.lineCap = "round";
+		// ctx.strokeStyle = drawing.color;
+		// ctx.lineWidth = 4;
+		// ctx.lineCap = "round";
 
 		const rect = canvas.getBoundingClientRect();
 		const x = e.clientX - rect.left;
@@ -43,21 +43,28 @@ function DrawingCanvas() {
 
 		if (drawing.color === 'green') {
 			pointsRef.current.push([Math.floor(x), Math.floor(y)]);
+			console.log({ originalReader });
+			originalReader.updateCanvas({
+				x: Math.floor(x),
+				y: Math.floor(y),
+				slice: parseInt(document.getElementById('myRange-text').innerText),
+				color: 'green'
+			});
 		} else {
 			pointsToRemoveRef.current.push([Math.floor(x), Math.floor(y)]);
 		}
 
-		ctx.lineTo(x, y);
-		ctx.stroke();
+		// ctx.lineTo(x, y);
+		// ctx.stroke();
 
-		ctx.beginPath();
-		ctx.moveTo(x, y);
+		// ctx.beginPath();
+		// ctx.moveTo(x, y);
 	};
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext('2d');
-		ctxRef.current = ctx;
+		// ctxRef.current = ctx;
 
 		canvas.addEventListener('mousedown', startDrawing);
 		canvas.addEventListener('mouseup', stopDrawing);
@@ -70,7 +77,7 @@ function DrawingCanvas() {
 			canvas.removeEventListener('mousemove', draw);
 			canvas.removeEventListener('mouseout', stopDrawing);
 		};
-	}, [drawing.color]);
+	}, [drawing.color, originalReader]);
 
 	return (
 		<canvas id="drawingCanvas" ref={ canvasRef } className='absolute top-0 left-0 w-full h-full' width={ 100 } height={ 100 } />

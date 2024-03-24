@@ -5,7 +5,7 @@ import DrawingCanvas from './DrawingCanvas';
 function ImageViewer({ canvasId, sliderId }) {
 	return (
 		<div className='flex flex-col justify-stretch items-center w-auto gap-2 mx-auto'>
-			<div className="relative flex justify-stretch items-stretch w-auto">
+			<div className="relative flex justify-stretch items-stretch w-auto outline outline-1 outline-offset-2">
 				<canvas id={ canvasId } className='w-full' />
 				{ canvasId === 'myCanvas' && <DrawingCanvas /> }
 			</div>

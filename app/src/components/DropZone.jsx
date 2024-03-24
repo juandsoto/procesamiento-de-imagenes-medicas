@@ -4,16 +4,20 @@ import useStore from '../store';
 import { wait } from '../utils';
 
 function DropZone() {
-	const { setOriginalImage } = useStore();
+	const { setOriginalImage, setOriginalReader } = useStore();
 
 	const handleFileSelect = async (e) => {
 		let file = e.target.files[0];
 		if (!file) return;
 		setOriginalImage(file);
 
-		await wait(500);
+		await wait(300);
 
 		const niftiReader = new NiftiReader('myCanvas', 'myRange');
+		setOriginalReader(niftiReader);
+
+		await wait(300);
+
 		let blob = niftiReader.makeSlice(file, 0, file.size);
 		niftiReader.readFile(file, blob);
 	};

@@ -12,6 +12,7 @@ class NiftiReader {
 		this.defaultSlice = slice;
 
 		this.readNIFTI = this.readNIFTI.bind(this);
+		this.updateCanvas = this.updateCanvas.bind(this);
 	}
 
 	makeSlice(file, start, length) {
@@ -126,33 +127,31 @@ class NiftiReader {
 
 	drawCanvas(slice, niftiHeader, niftiImage) {
 		// get nifti dimensions
-		let cols = niftiHeader.dims[1];
-		let rows = niftiHeader.dims[2];
+		this.cols = niftiHeader.dims[1];
+		this.rows = niftiHeader.dims[2];
 
 		// set canvas dimensions to nifti slice dimensions
-		this.canvas.width = cols;
-		this.canvas.height = rows;
+		this.canvas.width = this.cols;
+		this.canvas.height = this.rows;
 		if (this.drawingCanvas.width !== this.canvas.width && this.drawingCanvas.height !== this.canvas.height) {
 			this.drawingCanvas.width = this.canvas.width;
 			this.drawingCanvas.height = this.canvas.height;
 		}
 
 		// make canvas image data
-		let ctx = this.canvas.getContext("2d");
-		let canvasImageData = ctx.createImageData(cols, rows);
+		this.ctx = this.canvas.getContext("2d");
+		this.canvasImageData = this.ctx.createImageData(this.cols, this.rows);
 
 		let typedData = this.getTypedData(niftiHeader, niftiImage);
 
-
 		// offset to specified slice
-		let sliceSize = cols * rows;
+		let sliceSize = this.cols * this.rows;
 		let sliceOffset = sliceSize * slice;
 
 		// Normalize voxel values and map them to grayscale colors
-		for (let row = 0; row < rows; row++) {
-			let rowOffset = row * cols;
-
-			for (let col = 0; col < cols; col++) {
+		for (let row = 0; row < this.rows; row++) {
+			let rowOffset = row * this.cols;
+			for (let col = 0; col < this.cols; col++) {
 				let offset = sliceOffset + rowOffset + col;
 				let value = typedData[offset];
 
@@ -160,16 +159,27 @@ class NiftiReader {
 				let normalizedValue = Math.round((value - this.minValue) * (255 / (this.maxValue - this.minValue)));
 
 				// Set the RGBA color values based on the normalized voxel value
-				canvasImageData.data[(rowOffset + col) * 4] = normalizedValue; // Red channel
-				canvasImageData.data[(rowOffset + col) * 4 + 1] = normalizedValue; // Green channel
-				canvasImageData.data[(rowOffset + col) * 4 + 2] = normalizedValue; // Blue channel
-				canvasImageData.data[(rowOffset + col) * 4 + 3] = 255; // Alpha channel (fully opaque)
+				this.canvasImageData.data[(rowOffset + col) * 4] = normalizedValue; // Red channel
+				this.canvasImageData.data[(rowOffset + col) * 4 + 1] = normalizedValue; // Green channel
+				this.canvasImageData.data[(rowOffset + col) * 4 + 2] = 0; // Blue channel
+				this.canvasImageData.data[(rowOffset + col) * 4 + 3] = 255; // Alpha channel (fully opaque)
 			}
 		}
 
-		ctx.putImageData(canvasImageData, 0, 0);
+		this.ctx.putImageData(this.canvasImageData, 0, 0);
 
 	};
+
+	updateCanvas(props) {
+		let rowOffset = props.y * this.cols;
+		this.canvasImageData.data[(rowOffset + props.x) * 4] = props.color === 'red' ? 255 : 0; // Red channel
+		this.canvasImageData.data[(rowOffset + props.x) * 4 + 1] = props.color === 'green' ? 255 : 0; // Green channel
+		this.canvasImageData.data[(rowOffset + props.x) * 4 + 2] = 0; // Blue channel
+		this.canvasImageData.data[(rowOffset + props.x) * 4 + 3] = 255;
+
+		this.ctx.putImageData(this.canvasImageData, 0, 0);
+
+	}
 
 	drawCoronalSlice(slice, niftiHeader, niftiImage) {
 		// Get NIfTI dimensions

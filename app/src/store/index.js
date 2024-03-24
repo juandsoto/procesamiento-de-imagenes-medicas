@@ -9,6 +9,8 @@ const useStore = create((set) => ({
 	setIsProcessing: (value) => set((_) => ({ isProcessing: value })),
 	selectedAlgorithm: null,
 	setSelectedAlgorithm: (algorithm) => set((_) => ({ selectedAlgorithm: algorithm })),
+	originalReader: null,
+	setOriginalReader: (niftiReader) => set((_) => ({ originalReader: niftiReader })),
 	drawing: {
 		points: [],
 		pointsToRemove: [],
@@ -27,7 +29,8 @@ const useStore = create((set) => ({
 		resultImage: null,
 		isProcessing: false,
 		selectedAlgorithm: null,
-		drawing: { points: [], pointsToRemove: [], color: 'green' }
+		drawing: { points: [], pointsToRemove: [], color: 'green' },
+		originalReader: null
 	})),
 	algorithms: {
 		'thresholding': 150,
