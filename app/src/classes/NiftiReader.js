@@ -8,7 +8,8 @@ class NiftiReader {
 		this.drawingCanvas = document.getElementById('drawingCanvas');
 		this.slider = document.getElementById(sliderId);
 		this.sliderText = document.getElementById(`${sliderId}-text`);
-		this.selectedArea = [];
+		this.selectedArea = [[102, 76, 96]];
+		this.unselectedArea = [];
 
 		this.defaultSlice = slice;
 
@@ -121,9 +122,9 @@ class NiftiReader {
 		this.sliderText.innerText = this.slider.value;
 		this.slider.oninput = debounce(() => {
 			this.sliderText.innerText = this.slider.value;
-			this.drawCanvas(this.slider.value, niftiHeader, niftiImage);
+			this.drawCanvas(parseInt(this.slider.value), niftiHeader, niftiImage);
 		}, 10);
-		this.drawCanvas(this.slider.value, niftiHeader, niftiImage);
+		this.drawCanvas(parseInt(this.slider.value), niftiHeader, niftiImage);
 	};
 
 	drawCanvas(slice, niftiHeader, niftiImage) {
@@ -157,14 +158,13 @@ class NiftiReader {
 				let value = typedData[offset];
 
 				// Normalize the voxel value to the range [0, 255]
-				const isSelected = this.selectedArea.some((p) => p[0] === col && p[1] === row);
+				const isSelected = this.selectedArea.some((p) => p[0] === col && p[1] === row && p[2] === slice);
+				const isUnselected = this.unselectedArea.some((p) => p[0] === col && p[1] === row && p[2] === slice);
 				let normalizedValue = Math.round((value - this.minValue) * (255 / (this.maxValue - this.minValue)));
 
-				if (isSelected) console.log(col, row);
-
-				const red = isSelected ? 0 : normalizedValue;
-				const green = isSelected ? 255 : normalizedValue;
-				const blue = isSelected ? 0 : 0;
+				const red = isUnselected ? 255 : isSelected ? 0 : normalizedValue;
+				const green = isUnselected ? 0 : isSelected ? 255 : normalizedValue;
+				const blue = isUnselected ? 0 : isSelected ? 0 : normalizedValue;
 
 				// Set the RGBA color values based on the normalized voxel value
 				this.canvasImageData.data[(rowOffset + col) * 4] = red; // Red channel
@@ -179,7 +179,12 @@ class NiftiReader {
 	};
 
 	updateCanvas(props) {
-		this.selectedArea.push([props.x, props.y]);
+		console.log(props);
+		if (props.color === 'green') {
+			this.selectedArea.push([props.x, props.y, props.slice]);
+		} else {
+			this.unselectedArea.push([props.x, props.y, props.slice]);
+		}
 
 		let rowOffset = props.y * this.cols;
 		this.canvasImageData.data[(rowOffset + props.x) * 4] = props.color === 'red' ? 255 : 0; // Red channel

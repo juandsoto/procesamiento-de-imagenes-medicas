@@ -3,7 +3,6 @@ import useStore from '../store';
 
 function DrawingCanvas() {
 	const canvasRef = useRef(null);
-	const ctxRef = useRef(null);
 	const isDrawing = useRef(false);
 	const pointsRef = useRef([]);
 	const pointsToRemoveRef = useRef([]);
@@ -11,7 +10,6 @@ function DrawingCanvas() {
 
 	const startDrawing = (e) => {
 		isDrawing.current = true;
-		// ctxRef.current.beginPath();
 		draw(e);
 	};
 
@@ -24,18 +22,12 @@ function DrawingCanvas() {
 			addPointsToDrawing('pointsToRemove', pointsToRemoveRef.current);
 			pointsToRemoveRef.current = [];
 		}
-		// ctxRef.current.closePath();
 	};
 
 	const draw = (e) => {
 		if (!isDrawing.current) return;
 
 		const canvas = canvasRef.current;
-		// const ctx = ctxRef.current;
-
-		// ctx.strokeStyle = drawing.color;
-		// ctx.lineWidth = 4;
-		// ctx.lineCap = "round";
 
 		const rect = canvas.getBoundingClientRect();
 		const x = e.clientX - rect.left;
@@ -43,7 +35,6 @@ function DrawingCanvas() {
 
 		if (drawing.color === 'green') {
 			pointsRef.current.push([Math.floor(x), Math.floor(y)]);
-			console.log({ originalReader });
 			originalReader.updateCanvas({
 				x: Math.floor(x),
 				y: Math.floor(y),
@@ -52,13 +43,13 @@ function DrawingCanvas() {
 			});
 		} else {
 			pointsToRemoveRef.current.push([Math.floor(x), Math.floor(y)]);
+			originalReader.updateCanvas({
+				x: Math.floor(x),
+				y: Math.floor(y),
+				slice: parseInt(document.getElementById('myRange-text').innerText),
+				color: 'red'
+			});
 		}
-
-		// ctx.lineTo(x, y);
-		// ctx.stroke();
-
-		// ctx.beginPath();
-		// ctx.moveTo(x, y);
 	};
 
 	useEffect(() => {
