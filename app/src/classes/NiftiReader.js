@@ -8,6 +8,7 @@ class NiftiReader {
 		this.drawingCanvas = document.getElementById('drawingCanvas');
 		this.slider = document.getElementById(sliderId);
 		this.sliderText = document.getElementById(`${sliderId}-text`);
+		this.selectedArea = [];
 
 		this.defaultSlice = slice;
 
@@ -156,12 +157,19 @@ class NiftiReader {
 				let value = typedData[offset];
 
 				// Normalize the voxel value to the range [0, 255]
+				const isSelected = this.selectedArea.some((p) => p[0] === col && p[1] === row);
 				let normalizedValue = Math.round((value - this.minValue) * (255 / (this.maxValue - this.minValue)));
 
+				if (isSelected) console.log(col, row);
+
+				const red = isSelected ? 0 : normalizedValue;
+				const green = isSelected ? 255 : normalizedValue;
+				const blue = isSelected ? 0 : 0;
+
 				// Set the RGBA color values based on the normalized voxel value
-				this.canvasImageData.data[(rowOffset + col) * 4] = normalizedValue; // Red channel
-				this.canvasImageData.data[(rowOffset + col) * 4 + 1] = normalizedValue; // Green channel
-				this.canvasImageData.data[(rowOffset + col) * 4 + 2] = 0; // Blue channel
+				this.canvasImageData.data[(rowOffset + col) * 4] = red; // Red channel
+				this.canvasImageData.data[(rowOffset + col) * 4 + 1] = green; // Green channel
+				this.canvasImageData.data[(rowOffset + col) * 4 + 2] = blue; // Blue channel
 				this.canvasImageData.data[(rowOffset + col) * 4 + 3] = 255; // Alpha channel (fully opaque)
 			}
 		}
@@ -171,6 +179,8 @@ class NiftiReader {
 	};
 
 	updateCanvas(props) {
+		this.selectedArea.push([props.x, props.y]);
+
 		let rowOffset = props.y * this.cols;
 		this.canvasImageData.data[(rowOffset + props.x) * 4] = props.color === 'red' ? 255 : 0; // Red channel
 		this.canvasImageData.data[(rowOffset + props.x) * 4 + 1] = props.color === 'green' ? 255 : 0; // Green channel

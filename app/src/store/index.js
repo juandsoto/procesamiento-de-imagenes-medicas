@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import NiftiReader from "../classes/NiftiReader";
 
 const useStore = create((set) => ({
 	originalImage: null,
@@ -23,7 +24,16 @@ const useStore = create((set) => ({
 			[type]: [...state.drawing[type], ...pointsToAdd]
 		}
 	})),
-	clearDrawing: () => useStore.getState().setDrawing({ points: [], pointsToRemove: [] }),
+	clearDrawing: () => {
+		const niftiReader = new NiftiReader('myCanvas', 'myRange');
+		const file = useStore.getState().originalImage;
+		useStore.getState().setOriginalReader(niftiReader);
+
+		let blob = niftiReader.makeSlice(file, 0, file.size);
+		niftiReader.readFile(file, blob);
+
+		useStore.getState().setDrawing({ points: [], pointsToRemove: [] });
+	},
 	reset: () => set((_) => ({
 		originalImage: null,
 		resultImage: null,
