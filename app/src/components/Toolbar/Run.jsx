@@ -4,7 +4,7 @@ import useStore from '../../store';
 import { wait } from "../../utils";
 
 function Run() {
-	const { isProcessing, setIsProcessing, originalImage, setResultImage, selectedAlgorithm, algorithms, drawing } = useStore();
+	const { isProcessing, setIsProcessing, originalReader, originalImage, setResultImage, selectedAlgorithm, algorithms, drawing } = useStore();
 	const [error, setError] = useState(null);
 
 	const handleSubmit = async () => {
@@ -23,8 +23,8 @@ function Run() {
 					payload.k = parseInt(algorithms['kmeans']);
 					break;
 				case 'region_growing':
-					payload.points = drawing.points;
-					payload.pointsToRemove = drawing.pointsToRemove;
+					payload.points = originalReader.selectedArea.map(pos => [pos[0], pos[1]]);
+					payload.pointsToRemove = originalReader.unselectedArea.map(pos => [pos[0], pos[1]]);;
 					if (!payload.points.length) {
 						setError('You must draw (at least with green color) on the image for the region growing algorithm to work. Use the drawing tool');
 						setIsProcessing(false);

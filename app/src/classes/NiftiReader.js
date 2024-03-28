@@ -8,7 +8,7 @@ class NiftiReader {
 		this.drawingCanvas = document.getElementById('drawingCanvas');
 		this.slider = document.getElementById(sliderId);
 		this.sliderText = document.getElementById(`${sliderId}-text`);
-		this.selectedArea = [[102, 76, 96]];
+		this.selectedArea = [];
 		this.unselectedArea = [];
 
 		this.defaultSlice = slice;
@@ -102,29 +102,26 @@ class NiftiReader {
 	};
 
 	readNIFTI(name, data) {
-
-		let niftiHeader, niftiImage;
-
 		// parse nifti
 		if (nifti.isCompressed(data)) {
 			data = nifti.decompress(data);
 		}
 
 		if (nifti.isNIFTI(data)) {
-			niftiHeader = nifti.readHeader(data);
-			niftiImage = nifti.readImage(niftiHeader, data);
+			this.niftiHeader = nifti.readHeader(data);
+			this.niftiImage = nifti.readImage(this.niftiHeader, data);
 		}
 
 		// set up slider
-		let slices = niftiHeader.dims[3];
+		let slices = this.niftiHeader.dims[3];
 		this.slider.max = slices - 1;
 		this.slider.value = this.defaultSlice ?? Math.round(slices / 2);
 		this.sliderText.innerText = this.slider.value;
 		this.slider.oninput = debounce(() => {
 			this.sliderText.innerText = this.slider.value;
-			this.drawCanvas(parseInt(this.slider.value), niftiHeader, niftiImage);
+			this.drawCanvas(parseInt(this.slider.value), this.niftiHeader, this.niftiImage);
 		}, 10);
-		this.drawCanvas(parseInt(this.slider.value), niftiHeader, niftiImage);
+		this.drawCanvas(parseInt(this.slider.value), this.niftiHeader, this.niftiImage);
 	};
 
 	drawCanvas(slice, niftiHeader, niftiImage) {
@@ -285,6 +282,7 @@ class NiftiReader {
 		// Render the image on canvas
 		ctx.putImageData(canvasImageData, 0, 0);
 	}
+
 
 }
 

@@ -13,17 +13,9 @@ const useStore = create((set) => ({
 	originalReader: null,
 	setOriginalReader: (niftiReader) => set((_) => ({ originalReader: niftiReader })),
 	drawing: {
-		points: [],
-		pointsToRemove: [],
 		color: 'green'
 	},
 	setDrawing: (props) => set((state) => ({ drawing: { ...state.drawing, ...props } })),
-	addPointsToDrawing: (type, pointsToAdd) => set((state) => ({
-		drawing: {
-			...state.drawing,
-			[type]: [...state.drawing[type], ...pointsToAdd]
-		}
-	})),
 	clearDrawing: () => {
 		const niftiReader = new NiftiReader('myCanvas', 'myRange');
 		const file = useStore.getState().originalImage;
@@ -31,15 +23,13 @@ const useStore = create((set) => ({
 
 		let blob = niftiReader.makeSlice(file, 0, file.size);
 		niftiReader.readFile(file, blob);
-
-		useStore.getState().setDrawing({ points: [], pointsToRemove: [] });
 	},
 	reset: () => set((_) => ({
 		originalImage: null,
 		resultImage: null,
 		isProcessing: false,
 		selectedAlgorithm: null,
-		drawing: { points: [], pointsToRemove: [], color: 'green' },
+		drawing: { color: 'green' },
 		originalReader: null
 	})),
 	algorithms: {

@@ -4,9 +4,7 @@ import useStore from '../store';
 function DrawingCanvas() {
 	const canvasRef = useRef(null);
 	const isDrawing = useRef(false);
-	const pointsRef = useRef([]);
-	const pointsToRemoveRef = useRef([]);
-	const { drawing, addPointsToDrawing, originalReader } = useStore();
+	const { drawing, originalReader } = useStore();
 
 	const startDrawing = (e) => {
 		isDrawing.current = true;
@@ -15,13 +13,6 @@ function DrawingCanvas() {
 
 	const stopDrawing = () => {
 		isDrawing.current = false;
-		if (drawing.color === 'green') {
-			addPointsToDrawing('points', pointsRef.current);
-			pointsRef.current = [];
-		} else {
-			addPointsToDrawing('pointsToRemove', pointsToRemoveRef.current);
-			pointsToRemoveRef.current = [];
-		}
 	};
 
 	const draw = (e) => {
@@ -34,7 +25,6 @@ function DrawingCanvas() {
 		const y = e.clientY - rect.top;
 
 		if (drawing.color === 'green') {
-			pointsRef.current.push([Math.floor(x), Math.floor(y)]);
 			originalReader.updateCanvas({
 				x: Math.floor(x),
 				y: Math.floor(y),
@@ -42,7 +32,6 @@ function DrawingCanvas() {
 				color: 'green'
 			});
 		} else {
-			pointsToRemoveRef.current.push([Math.floor(x), Math.floor(y)]);
 			originalReader.updateCanvas({
 				x: Math.floor(x),
 				y: Math.floor(y),
@@ -55,7 +44,6 @@ function DrawingCanvas() {
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const ctx = canvas.getContext('2d');
-		// ctxRef.current = ctx;
 
 		canvas.addEventListener('mousedown', startDrawing);
 		canvas.addEventListener('mouseup', stopDrawing);
