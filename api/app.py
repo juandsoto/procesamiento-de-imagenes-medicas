@@ -81,3 +81,7 @@ def upload_file():
     finally:
         if os.path.exists(upload_path):
             os.remove(upload_path)
+
+
+if __name__ == "__main__":
+    app.run()
