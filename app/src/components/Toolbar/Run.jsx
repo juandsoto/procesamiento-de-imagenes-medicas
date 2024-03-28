@@ -40,7 +40,11 @@ function Run() {
 			}
 			formData.append('data', JSON.stringify(payload));
 
-			const response = await fetch('http://localhost:5000/upload', {
+			const isDeployed = window.location.hostname.includes("vercel.app");
+
+			const URL = isDeployed ? 'https://jdsotoc06.pythonanywhere.com/upload' : 'http://localhost:5000/upload';
+
+			const response = await fetch(URL, {
 				method: 'POST',
 				body: formData,
 				headers: {

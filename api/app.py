@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, jsonify, request, send_file, make_response
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import nibabel as nib
 import numpy as np
@@ -8,6 +8,18 @@ from segmentation import umbralizacion, isodata, kmeans, region_growing
 
 app = Flask(__name__)
 CORS(app)
+CORS(
+    app,
+    resources={
+        r"/*": {
+            "origins": [
+                "http://localhost:5173",
+                "https://medical-image-processing.vercel.app",
+            ]
+        }
+    },
+)
+
 
 UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER

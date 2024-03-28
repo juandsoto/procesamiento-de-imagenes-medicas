@@ -40,7 +40,6 @@ function Toolbar({ className = '', onClose }) {
 					{/* { originalImage && (
 						<Download text="annotation" filename={ originalImage.name } file={ originalReader?.build() } />
 					) } */}
-					<button onClick={ originalReader?.build }>asd</button>
 					{ resultImage && <Download text="result" filename={ `${originalImage.name.split('.')[0]}_result.nii` } file={ resultImage } /> }
 				</div>
 			</div>
