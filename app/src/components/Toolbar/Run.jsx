@@ -35,6 +35,12 @@ function Run() {
 					}
 					payload.threshold = parseInt(algorithms['region_growing']);
 					break;
+				case 'denoising_mean':
+					payload.size = parseInt(algorithms['denoising']);
+					break;
+				case 'denoising_median':
+					payload.size = parseInt(algorithms['denoising']);
+					break;
 				default:
 					break;
 			}

@@ -28,7 +28,7 @@ function Algorithms() {
 			<GlowingButton
 				disabled={ mustBeDisabled }
 				className={ selectedAlgorithm !== 'kmeans' ? 'opacity-50' : '' }
-				color="purple"
+				color="blue"
 				onClick={ () => setSelectedAlgorithm('kmeans') }
 			>
 				K-means
@@ -40,6 +40,14 @@ function Algorithms() {
 				onClick={ () => setSelectedAlgorithm('region_growing') }
 			>
 				Region growing
+			</GlowingButton>
+			<GlowingButton
+				disabled={ mustBeDisabled }
+				className={ !['denoising_mean', 'denoising_median'].includes(selectedAlgorithm) ? 'opacity-50' : '' }
+				color="fuchsia"
+				onClick={ () => setSelectedAlgorithm('denoising_mean') }
+			>
+				Denoising
 			</GlowingButton>
 		</div>
 	);

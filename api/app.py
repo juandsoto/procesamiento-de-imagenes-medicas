@@ -5,6 +5,7 @@ from flask_cors import CORS
 import nibabel as nib
 import numpy as np
 from segmentation import umbralizacion, isodata, kmeans, region_growing
+from denoising import mean_filter, median_filter
 
 app = Flask(__name__)
 CORS(app)
@@ -66,6 +67,10 @@ def upload_file():
                 data["points"],
                 data["pointsToRemove"],
             )
+        elif algorithm == "denoising_mean":
+            segmentation_result = mean_filter(nii_image, data["size"])
+        elif algorithm == "denoising_median":
+            segmentation_result = median_filter(nii_image, data["size"])
 
         segmented_image = segmentation_result
         new_nii_image = nib.Nifti1Image(

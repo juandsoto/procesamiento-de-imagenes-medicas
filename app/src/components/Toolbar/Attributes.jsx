@@ -12,6 +12,10 @@ function Attributes() {
 			return <KmeansAttributes />;
 		case 'region_growing':
 			return <RegionGrowingAttributes />;
+		case 'denoising_mean':
+			return <DenoisingAttributes />;
+		case 'denoising_median':
+			return <DenoisingAttributes />;
 		default:
 			return null;
 	}
@@ -64,6 +68,36 @@ function RegionGrowingAttributes() {
 				value={ algorithms['region_growing'] }
 				onChange={ (e) => setAlgorithmValue('region_growing', e.target.value) }
 			/>
+		</div>
+	);
+}
+
+function DenoisingAttributes() {
+	const { setAlgorithmValue, algorithms, setSelectedAlgorithm } = useStore();
+
+	const handleChange = (e) => setSelectedAlgorithm(e.target.value);
+
+	return (
+		<div className='space-y-4'>
+			<select
+				className='bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-primary dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+				name="denoising_method"
+				id="denoising_method"
+				onChange={ handleChange }
+			>
+				<option value="denoising_mean">Mean Filter</option>
+				<option value="denoising_median">Median Filter</option>
+			</select>
+			<div>
+				<label htmlFor="denoising-attribute">Size { algorithms['denoising'] }</label>
+				<Slider
+					id="denoising-attribute"
+					min={ 1 }
+					max={ 10 }
+					value={ algorithms['denoising'] }
+					onChange={ (e) => setAlgorithmValue('denoising', e.target.value) }
+				/>
+			</div>
 		</div>
 	);
 }

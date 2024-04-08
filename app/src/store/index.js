@@ -36,6 +36,7 @@ const useStore = create((set) => ({
 		'thresholding': 150,
 		'kmeans': 5,
 		'region_growing': 20,
+		'denoising': 3,
 	},
 	setAlgorithmValue: (algorithm, value) => set((state) => ({
 		algorithms: { ...state.algorithms, [algorithm]: value }

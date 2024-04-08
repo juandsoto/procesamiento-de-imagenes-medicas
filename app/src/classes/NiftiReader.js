@@ -159,7 +159,7 @@ class NiftiReader {
 				const isUnselected = this.unselectedArea.some((p) => p[0] === col && p[1] === row && p[2] === slice);
 				let normalizedValue = Math.round((value - this.minValue) * (255 / (this.maxValue - this.minValue)));
 
-				const red = isUnselected ? 255 : isSelected ? 0 : normalizedValue;
+				const red = isUnselected ? 255 : isSelected ? 0 : 0;
 				const green = isUnselected ? 0 : isSelected ? 255 : normalizedValue;
 				const blue = isUnselected ? 0 : isSelected ? 0 : normalizedValue;
 
@@ -176,7 +176,6 @@ class NiftiReader {
 	};
 
 	updateCanvas(props) {
-		console.log(props);
 		if (props.color === 'green') {
 			this.selectedArea.push([props.x, props.y, props.slice]);
 		} else {
