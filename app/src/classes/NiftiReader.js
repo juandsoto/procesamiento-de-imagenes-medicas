@@ -159,7 +159,7 @@ class NiftiReader {
 				const isUnselected = this.unselectedArea.some((p) => p[0] === col && p[1] === row && p[2] === slice);
 				let normalizedValue = Math.round((value - this.minValue) * (255 / (this.maxValue - this.minValue)));
 
-				const red = isUnselected ? 255 : isSelected ? 0 : 0;
+				const red = isUnselected ? 255 : isSelected ? 0 : normalizedValue;
 				const green = isUnselected ? 0 : isSelected ? 255 : normalizedValue;
 				const blue = isUnselected ? 0 : isSelected ? 0 : normalizedValue;
 

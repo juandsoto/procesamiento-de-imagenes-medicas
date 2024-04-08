@@ -49,6 +49,14 @@ function Algorithms() {
 			>
 				Denoising
 			</GlowingButton>
+			<GlowingButton
+				disabled={ mustBeDisabled }
+				className={ !['intensity_rescaling', 'z_score'].includes(selectedAlgorithm) ? 'opacity-50' : '' }
+				color="amber"
+				onClick={ () => setSelectedAlgorithm('intensity_rescaling') }
+			>
+				Intensity standardisation
+			</GlowingButton>
 		</div>
 	);
 }

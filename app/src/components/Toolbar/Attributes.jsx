@@ -16,6 +16,10 @@ function Attributes() {
 			return <DenoisingAttributes />;
 		case 'denoising_median':
 			return <DenoisingAttributes />;
+		case 'intensity_rescaling':
+			return <IntensityStandardisationAttributes />;
+		case 'z_score':
+			return <IntensityStandardisationAttributes />;
 		default:
 			return null;
 	}
@@ -98,6 +102,26 @@ function DenoisingAttributes() {
 					onChange={ (e) => setAlgorithmValue('denoising', e.target.value) }
 				/>
 			</div>
+		</div>
+	);
+}
+
+function IntensityStandardisationAttributes() {
+	const { setSelectedAlgorithm } = useStore();
+
+	const handleChange = (e) => setSelectedAlgorithm(e.target.value);
+
+	return (
+		<div>
+			<select
+				className='bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-primary dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+				name="intensity_standardisation_method"
+				id="intensity_standardisation_method"
+				onChange={ handleChange }
+			>
+				<option value="intensity_rescaling">Intensity rescaling</option>
+				<option value="z_score">Z-score</option>
+			</select>
 		</div>
 	);
 }

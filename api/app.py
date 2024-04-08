@@ -6,6 +6,7 @@ import nibabel as nib
 import numpy as np
 from segmentation import umbralizacion, isodata, kmeans, region_growing
 from denoising import mean_filter, median_filter
+from intensity_standardisation import intensity_rescaling, z_score
 
 app = Flask(__name__)
 CORS(app)
@@ -71,6 +72,10 @@ def upload_file():
             segmentation_result = mean_filter(nii_image, data["size"])
         elif algorithm == "denoising_median":
             segmentation_result = median_filter(nii_image, data["size"])
+        elif algorithm == "intensity_rescaling":
+            segmentation_result = intensity_rescaling(nii_image)
+        elif algorithm == "z_score":
+            segmentation_result = z_score(nii_image)
 
         segmented_image = segmentation_result
         new_nii_image = nib.Nifti1Image(

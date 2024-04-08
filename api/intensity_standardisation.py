@@ -3,10 +3,25 @@ import numpy as np
 
 def intensity_rescaling(image):
     image_data = image.get_fdata()
+    # Verificar el rango y tipo de datos inicial
+    print("Valor mínimo:", np.min(image_data))
+    print("Valor máximo:", np.max(image_data))
+    print("Tipo de datos:", image_data.dtype)
+
     # Escalar al intervalo [0, 1]
-    result = (image_data - np.min(image_data)) / (
-        np.max(image_data) - np.min(image_data)
-    )
+    min_val = np.min(image_data)
+    max_val = np.max(image_data)
+
+    min_range = 0
+    max_range = 4
+
+    result = (image_data - min_val) / (max_val - min_val) * (
+        max_range - min_range
+    ) + min_range
+
+    # Verificar el rango y tipo de datos después del escalado
+    print("Valor mínimo después del escalado:", np.min(result))
+    print("Valor máximo después del escalado:", np.max(result))
 
     return result
 
