@@ -20,6 +20,10 @@ function Attributes() {
 			return <IntensityStandardisationAttributes />;
 		case 'z_score':
 			return <IntensityStandardisationAttributes />;
+		case 'white_stripe':
+			return <IntensityStandardisationAttributes />;
+		case 'histogram_matching':
+			return <IntensityStandardisationAttributes />;
 		default:
 			return null;
 	}
@@ -107,12 +111,12 @@ function DenoisingAttributes() {
 }
 
 function IntensityStandardisationAttributes() {
-	const { setSelectedAlgorithm } = useStore();
+	const { selectedAlgorithm, setSelectedAlgorithm, algorithms, setAlgorithmValue } = useStore();
 
 	const handleChange = (e) => setSelectedAlgorithm(e.target.value);
 
 	return (
-		<div>
+		<div className='space-y-4'>
 			<select
 				className='bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-primary dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
 				name="intensity_standardisation_method"
@@ -121,7 +125,33 @@ function IntensityStandardisationAttributes() {
 			>
 				<option value="intensity_rescaling">Intensity rescaling</option>
 				<option value="z_score">Z-score</option>
+				<option value="white_stripe">White stripe</option>
+				<option value="histogram_matching">Histogram matching</option>
 			</select>
+			{ selectedAlgorithm === 'white_stripe' && (
+				<div>
+					<label htmlFor="white_stripe-attribute">Size { algorithms['white_stripe'] }</label>
+					<Slider
+						id="white_stripe-attribute"
+						min={ 1 }
+						max={ 10 }
+						value={ algorithms['white_stripe'] }
+						onChange={ (e) => setAlgorithmValue('white_stripe', e.target.value) }
+					/>
+				</div>
+			) }
+			{ selectedAlgorithm === 'histogram_matching' && (
+				<div>
+					<label htmlFor="histogram_matching-attribute">Size { algorithms['histogram_matching'] }</label>
+					<Slider
+						id="histogram_matching-attribute"
+						min={ 1 }
+						max={ 100 }
+						value={ algorithms['histogram_matching'] }
+						onChange={ (e) => setAlgorithmValue('histogram_matching', e.target.value) }
+					/>
+				</div>
+			) }
 		</div>
 	);
 }

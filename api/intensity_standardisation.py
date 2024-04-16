@@ -1,4 +1,5 @@
 import numpy as np
+from scipy import ndimage, interpolate
 
 
 def intensity_rescaling(image):
@@ -35,3 +36,37 @@ def z_score(image):
     result = (image_data - mean_intensity) / std_intensity
 
     return result
+
+
+def white_stripe(image, k=1):
+    image_data = image.get_fdata()
+
+    smoothed_image = ndimage.median_filter(image_data, size=k)
+
+    diff_img = image_data - smoothed_image
+
+    result = image_data + diff_img
+
+    return result
+
+
+def histogram_matching(reference, transform, k=3):
+    reference_img = reference.get_fdata()
+    transform_img = transform.get_fdata()
+    # Flatten the images
+    ref_flat = reference_img.flatten()
+    trans_flat = transform_img.flatten()
+
+    # Compute percentiles as landmarks
+    ref_percentiles = np.percentile(ref_flat, np.linspace(0, 100, k))
+    trans_percentiles = np.percentile(trans_flat, np.linspace(0, 100, k))
+
+    # Generate piece-wise function using linear interpolation
+    f = interpolate.interp1d(
+        trans_percentiles, ref_percentiles, kind="linear", fill_value="extrapolate"
+    )
+
+    # Map intensities according to the piece-wise function
+    matched_flat = f(trans_flat).reshape(transform_img.shape)
+
+    return matched_flat

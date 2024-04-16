@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import NiftiReader from "../../classes/NiftiReader";
 import useStore from '../../store';
 import { wait } from "../../utils";
 
 function Run() {
-	const { isProcessing, setIsProcessing, originalReader, originalImage, setResultImage, selectedAlgorithm, algorithms, drawing } = useStore();
+	const { isProcessing, setIsProcessing, originalReader, originalImage, setResultImage, selectedAlgorithm, algorithms } = useStore();
 	const [error, setError] = useState(null);
+	const secondFileInputRef = useRef(null);
+	const secondFileRef = useRef(null);
+
+	const handleSecondFileSelect = async (e) => {
+		let file = e.target.files[0];
+		if (!file) return;
+		secondFileRef.current = file;
+		handleSubmit();
+	};
 
 	const handleSubmit = async () => {
 		setIsProcessing(true);
@@ -40,6 +49,13 @@ function Run() {
 					break;
 				case 'denoising_median':
 					payload.size = parseInt(algorithms['denoising']);
+					break;
+				case 'white_stripe':
+					payload.k = parseInt(algorithms['white_stripe']);
+					break;
+				case 'histogram_matching':
+					payload.k = parseInt(algorithms['histogram_matching']);
+					formData.append('file2', secondFileRef.current);
 					break;
 				default:
 					break;
@@ -79,7 +95,14 @@ function Run() {
 				disabled={ isProcessing }
 				type="button"
 				className="w-32 py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-600 focus:z-10 focus:ring-2 focus:ring-green-600 focus:text-green-600 dark:bg-secondary dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-white/5 flex items-center justify-center gap-2 disabled:hover"
-				onClick={ handleSubmit }
+				onClick={ () => {
+					if (selectedAlgorithm === 'histogram_matching') {
+						secondFileInputRef.current.value = '';
+						secondFileInputRef.current.click();
+						return;
+					}
+					handleSubmit();
+				} }
 			>
 				{ isProcessing ? (
 					<>
@@ -100,6 +123,7 @@ function Run() {
 				) }
 			</button>
 			{ error && <span className='text-sm text-red-700'>{ error }</span> }
+			<input ref={ secondFileInputRef } id="dropzone-file" type="file" className="hidden" onChange={ handleSecondFileSelect } />
 		</div>
 	);
 }

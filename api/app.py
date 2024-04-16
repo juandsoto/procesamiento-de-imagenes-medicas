@@ -6,7 +6,12 @@ import nibabel as nib
 import numpy as np
 from segmentation import umbralizacion, isodata, kmeans, region_growing
 from denoising import mean_filter, median_filter
-from intensity_standardisation import intensity_rescaling, z_score
+from intensity_standardisation import (
+    intensity_rescaling,
+    z_score,
+    white_stripe,
+    histogram_matching,
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -37,22 +42,14 @@ def upload_file():
     data = request.form.get("data")
     data = json.loads(data)
     algorithm = data["algorithm"]
+    upload_path = "/no_path"
+    upload_path2 = "/no_path"
 
-    # If the user submits an empty part without a file, ignore it
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
     try:
-        upload_path = app.config["UPLOAD_FOLDER"] + "/" + file.filename
-        file.save(upload_path)
-
-        nii_image = nib.load(upload_path)
-
-        # Obtener las dimensiones de la imagen original
-        original_shape = nii_image.shape
-
-        # Crear una imagen vacía con las mismas dimensiones que la original
-        segmented_image = np.zeros(original_shape)
+        nii_image, segmented_image, upload_path = process_file(file)
 
         if algorithm == "thresholding":
             segmentation_result = umbralizacion(nii_image, data["tau"])
@@ -76,6 +73,16 @@ def upload_file():
             segmentation_result = intensity_rescaling(nii_image)
         elif algorithm == "z_score":
             segmentation_result = z_score(nii_image)
+        elif algorithm == "white_stripe":
+            segmentation_result = white_stripe(nii_image, data["k"])
+        elif algorithm == "histogram_matching":
+            file2 = request.files["file2"]
+            if file2.filename == "":
+                return jsonify({"error": "No selected file"}), 400
+
+            nii_image2, segmented_image2, upload_path2 = process_file(file2)
+
+            segmentation_result = histogram_matching(nii_image, nii_image2, data["k"])
 
         segmented_image = segmentation_result
         new_nii_image = nib.Nifti1Image(
@@ -103,6 +110,22 @@ def upload_file():
     finally:
         if os.path.exists(upload_path):
             os.remove(upload_path)
+        if os.path.exists(upload_path2):
+            os.remove(upload_path2)
+
+
+def process_file(file):
+    upload_path = app.config["UPLOAD_FOLDER"] + "/" + file.filename
+    file.save(upload_path)
+    nii_image = nib.load(upload_path)
+
+    # Obtener las dimensiones de la imagen original
+    original_shape = nii_image.shape
+
+    # Crear una imagen vacía con las mismas dimensiones que la original
+    segmented_image = np.zeros(original_shape)
+
+    return (nii_image, segmented_image, upload_path)
 
 
 if __name__ == "__main__":

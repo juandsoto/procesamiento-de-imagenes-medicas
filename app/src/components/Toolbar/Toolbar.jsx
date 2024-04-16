@@ -7,7 +7,7 @@ import Draw from './Draw';
 import Download from './Download';
 
 function Toolbar({ className = '', onClose }) {
-	const { originalImage, resultImage, originalReader, selectedAlgorithm, reset } = useStore();
+	const { originalImage, resultImage, selectedAlgorithm, reset } = useStore();
 
 	return (
 		<div className={ ["flex flex-col bg-secondary w-96 px-4 py-8 space-y-4", className].join(' ') }	>
