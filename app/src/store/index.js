@@ -37,7 +37,7 @@ const useStore = create((set) => ({
 		'kmeans': 5,
 		'region_growing': 20,
 		'denoising': 3,
-		'white_stripe': 1,
+		// 'white_stripe': 1,
 		'histogram_matching': 3,
 	},
 	setAlgorithmValue: (algorithm, value) => set((state) => ({

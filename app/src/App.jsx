@@ -9,14 +9,14 @@ function App() {
 	const { originalImage, isProcessing, resultImage, drawing } = useStore();
 
 	return (
-		<div className="min-h-screen flex items-stretch gap-8 max-w-screen-3xl mx-4 xl:mx-auto">
-			<div className="flex-1 space-y-8 mt-4 ml-0 xl:ml-8">
+		<div className="min-h-screen flex items-stretch gap-8 max-w-screen-3xl mx-4 lg:mx-auto">
+			<div className="flex-1 space-y-8 mt-4 ml-0 lg:ml-8">
 				<div className="flex items-center justify-center gap-2">
 					<img src="/logo.png" alt="logo" width={ 64 } />
 					<h1 className="text-2xl capitalize">Medical image processing</h1>
 				</div>
 				{ !isMobile && (
-					<button className="xl:hidden w-8 absolute top-0 right-4" onClick={ () => setIsMobile(true) }>
+					<button className="lg:hidden w-8 absolute top-0 right-4" onClick={ () => setIsMobile(true) }>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar-right-expand">
 							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 							<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
@@ -41,8 +41,8 @@ function App() {
 					<ImageViewer canvasId="myCanvasResult" sliderId="myRangeResult" />
 				) }
 			</div>
-			{ isMobile && <Toolbar className="xl:hidden absolute top-0 right-0 bottom-0 shadow-md shadow-secondary" onClose={ () => setIsMobile(false) } /> }
-			<Toolbar className="hidden xl:flex" />
+			{ isMobile && <Toolbar className="lg:hidden absolute top-0 right-0 bottom-0 shadow-md shadow-secondary" onClose={ () => setIsMobile(false) } /> }
+			<Toolbar className="hidden lg:flex" />
 		</div>
 	);
 }

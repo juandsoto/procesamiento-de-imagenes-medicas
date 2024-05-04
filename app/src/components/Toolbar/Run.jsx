@@ -50,11 +50,14 @@ function Run() {
 				case 'denoising_median':
 					payload.size = parseInt(algorithms['denoising']);
 					break;
-				case 'white_stripe':
-					payload.k = parseInt(algorithms['white_stripe']);
-					break;
+				// case 'white_stripe':
+				// 	payload.k = parseInt(algorithms['white_stripe']);
+				// 	break;
 				case 'histogram_matching':
 					payload.k = parseInt(algorithms['histogram_matching']);
+					formData.append('file2', secondFileRef.current);
+					break;
+				case 'image_registration':
 					formData.append('file2', secondFileRef.current);
 					break;
 				default:
@@ -96,7 +99,7 @@ function Run() {
 				type="button"
 				className="w-32 py-2.5 px-5 me-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-600 focus:z-10 focus:ring-2 focus:ring-green-600 focus:text-green-600 dark:bg-secondary dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-white/5 flex items-center justify-center gap-2 disabled:hover"
 				onClick={ () => {
-					if (selectedAlgorithm === 'histogram_matching') {
+					if (['histogram_matching', 'image_registration'].includes(selectedAlgorithm)) {
 						secondFileInputRef.current.value = '';
 						secondFileInputRef.current.click();
 						return;

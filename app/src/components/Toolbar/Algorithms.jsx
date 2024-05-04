@@ -57,6 +57,14 @@ function Algorithms() {
 			>
 				Intensity standardisation
 			</GlowingButton>
+			<GlowingButton
+				disabled={ mustBeDisabled }
+				className={ selectedAlgorithm !== 'image_registration' ? 'opacity-50' : '' }
+				color="light"
+				onClick={ () => setSelectedAlgorithm('image_registration') }
+			>
+				Image registration
+			</GlowingButton>
 		</div>
 	);
 }

@@ -1,4 +1,5 @@
 from scipy.ndimage import uniform_filter, median_filter as scipy_median_filter
+import numpy as np
 
 
 def mean_filter(image, size):

@@ -128,7 +128,7 @@ function IntensityStandardisationAttributes() {
 				<option value="white_stripe">White stripe</option>
 				<option value="histogram_matching">Histogram matching</option>
 			</select>
-			{ selectedAlgorithm === 'white_stripe' && (
+			{/* { selectedAlgorithm === 'white_stripe' && (
 				<div>
 					<label htmlFor="white_stripe-attribute">Size { algorithms['white_stripe'] }</label>
 					<Slider
@@ -139,7 +139,7 @@ function IntensityStandardisationAttributes() {
 						onChange={ (e) => setAlgorithmValue('white_stripe', e.target.value) }
 					/>
 				</div>
-			) }
+			) } */}
 			{ selectedAlgorithm === 'histogram_matching' && (
 				<div>
 					<label htmlFor="histogram_matching-attribute">Size { algorithms['histogram_matching'] }</label>

@@ -6,8 +6,18 @@ import { wait } from '../utils';
 function DropZone() {
 	const { setOriginalImage, setOriginalReader } = useStore();
 
+	const handleDrop = (event) => {
+		event.preventDefault();
+		const file = event.dataTransfer.files[0];
+		setFile(file);
+	};
+
 	const handleFileSelect = async (e) => {
 		let file = e.target.files[0];
+		setFile(file);
+	};
+
+	const setFile = async (file) => {
 		if (!file) return;
 		setOriginalImage(file);
 
@@ -23,7 +33,11 @@ function DropZone() {
 	};
 
 	return (
-		<div className="flex items-center justify-center">
+		<div
+			className="flex items-center justify-center"
+			onDrop={ handleDrop }
+			onDragOver={ (event) => event.preventDefault() }
+		>
 			<label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-primary hover:bg-gray-100 dark:border-white/20 dark:hover:border-white/40 dark:hover:bg-white/5">
 				<div className="flex flex-col items-center justify-center pt-5 pb-6">
 					<svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">

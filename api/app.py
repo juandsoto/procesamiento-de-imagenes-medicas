@@ -12,6 +12,7 @@ from intensity_standardisation import (
     white_stripe,
     histogram_matching,
 )
+from image_registration import image_registration
 
 app = Flask(__name__)
 CORS(app)
@@ -74,7 +75,7 @@ def upload_file():
         elif algorithm == "z_score":
             segmentation_result = z_score(nii_image)
         elif algorithm == "white_stripe":
-            segmentation_result = white_stripe(nii_image, data["k"])
+            segmentation_result = white_stripe(nii_image)
         elif algorithm == "histogram_matching":
             file2 = request.files["file2"]
             if file2.filename == "":
@@ -83,10 +84,21 @@ def upload_file():
             nii_image2, segmented_image2, upload_path2 = process_file(file2)
 
             segmentation_result = histogram_matching(nii_image, nii_image2, data["k"])
+        elif algorithm == "image_registration":
+            file2 = request.files["file2"]
+            if file2.filename == "":
+                return jsonify({"error": "No selected file"}), 400
+
+            nii_image2, segmented_image2, upload_path2 = process_file(file2)
+
+            segmentation_result = image_registration(nii_image, nii_image2)
 
         segmented_image = segmentation_result
+        if not algorithm in ["denoising_median", "denoising_mean"]:
+            segmented_image = (segmented_image * 255).astype(np.uint8)
+
         new_nii_image = nib.Nifti1Image(
-            (segmented_image * 255).astype(np.uint8),
+            segmented_image,
             nii_image.affine,
             nii_image.header,
         )

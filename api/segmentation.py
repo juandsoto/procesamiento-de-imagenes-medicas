@@ -31,7 +31,7 @@ def isodata(image_data, tau):
 
 def kmeans(image_data, k):
     image = image_data.get_fdata()
-    # Create the cluster centers
+
     ks = np.linspace(np.amin(image), np.amax(image), k)
 
     for i in range(5):
@@ -42,11 +42,9 @@ def kmeans(image_data, k):
             ks[j] = image[segmentation == j].mean()
         print(ks)
 
-    # Exclude background from the segmentation
     background = image < 10
     segmentation[background] = -1
 
-    # Calculate the percentage of the non-background image corresponding to each cluster
     percentage = [
         np.sum(segmentation == j) / np.sum(~background) * 100 for j in range(k)
     ]
