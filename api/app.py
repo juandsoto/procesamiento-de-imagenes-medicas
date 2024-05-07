@@ -13,6 +13,7 @@ from intensity_standardisation import (
     histogram_matching,
 )
 from image_registration import image_registration
+from paper import laplacian_coordinates
 
 app = Flask(__name__)
 CORS(app)
@@ -50,7 +51,8 @@ def upload_file():
         return jsonify({"error": "No selected file"}), 400
 
     try:
-        nii_image, segmented_image, upload_path = process_file(file)
+        if not is_image(file.filename) and algorithm != "laplacian_coordinates":
+            nii_image, segmented_image, upload_path = process_file(file)
 
         if algorithm == "thresholding":
             segmentation_result = umbralizacion(nii_image, data["tau"])
@@ -92,6 +94,18 @@ def upload_file():
             nii_image2, segmented_image2, upload_path2 = process_file(file2)
 
             segmentation_result = image_registration(nii_image, nii_image2)
+
+        elif algorithm == "laplacian_coordinates":
+            upload_path = app.config["UPLOAD_FOLDER"] + "/" + file.filename
+            file.save(upload_path)
+            result = laplacian_coordinates(file.filename, data["seeds"], data["labels"])
+            response = send_file(
+                result,
+                as_attachment=True,
+                download_name=file.filename,
+            )
+
+            return response
 
         segmented_image = segmentation_result
         if not algorithm in ["denoising_median", "denoising_mean"]:
@@ -138,6 +152,12 @@ def process_file(file):
     segmented_image = np.zeros(original_shape)
 
     return (nii_image, segmented_image, upload_path)
+
+
+def is_image(filename):
+    image_extensions = [".jpg", ".jpeg", ".png", ".webp"]
+    extension = os.path.splitext(filename)[1].lower()
+    return extension in image_extensions
 
 
 if __name__ == "__main__":

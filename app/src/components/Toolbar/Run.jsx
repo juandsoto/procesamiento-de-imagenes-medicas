@@ -4,7 +4,7 @@ import useStore from '../../store';
 import { wait } from "../../utils";
 
 function Run() {
-	const { isProcessing, setIsProcessing, originalReader, originalImage, setResultImage, selectedAlgorithm, algorithms } = useStore();
+	const { isProcessing, setIsProcessing, originalReader, originalImage, setResultImage, selectedAlgorithm, algorithms, laplacian, regularImage, setRegularImageResult } = useStore();
 	const [error, setError] = useState(null);
 	const secondFileInputRef = useRef(null);
 	const secondFileRef = useRef(null);
@@ -20,10 +20,17 @@ function Run() {
 		setIsProcessing(true);
 		try {
 			const formData = new FormData();
-			const file = originalImage;
+			let file;
+			let payload;
+			if (selectedAlgorithm === 'laplacian_coordinates') {
+				file = regularImage;
+				payload = { algorithm: selectedAlgorithm };
+			} else {
+				file = originalImage;
+				payload = { algorithm: selectedAlgorithm, slice: parseInt(document.getElementById('myRange-text').innerText) };
+			}
 			formData.append('file', file);
 
-			let payload = { algorithm: selectedAlgorithm, slice: parseInt(document.getElementById('myRange-text').innerText) };
 			switch (selectedAlgorithm) {
 				case 'thresholding':
 					payload.tau = parseInt(algorithms['thresholding']);
@@ -50,15 +57,16 @@ function Run() {
 				case 'denoising_median':
 					payload.size = parseInt(algorithms['denoising']);
 					break;
-				// case 'white_stripe':
-				// 	payload.k = parseInt(algorithms['white_stripe']);
-				// 	break;
 				case 'histogram_matching':
 					payload.k = parseInt(algorithms['histogram_matching']);
 					formData.append('file2', secondFileRef.current);
 					break;
 				case 'image_registration':
 					formData.append('file2', secondFileRef.current);
+					break;
+				case 'laplacian_coordinates':
+					payload.seeds = laplacian.seeds;
+					payload.labels = laplacian.labels;
 					break;
 				default:
 					break;
@@ -76,6 +84,13 @@ function Run() {
 					'Accept': '*/*'
 				}
 			});
+
+			if (selectedAlgorithm === 'laplacian_coordinates') {
+				const blob = await response.blob();
+				setRegularImageResult(new Blob([blob]));
+				setIsProcessing(false);
+				return;
+			}
 
 			const blob = await response.blob();
 			setResultImage(new Blob([blob]));

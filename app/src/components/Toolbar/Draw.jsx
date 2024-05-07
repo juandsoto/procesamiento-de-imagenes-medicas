@@ -2,7 +2,7 @@ import React from 'react';
 import useStore from '../../store';
 
 function Draw() {
-	const { drawing, setDrawing, clearDrawing } = useStore();
+	const { drawing, setDrawing, clearDrawing, regularImage, clearLaplacian } = useStore();
 
 	return (
 		<div className='space-y-2'>
@@ -36,6 +36,13 @@ function Draw() {
 				<button
 					className="text-red-700 px-4 py-2 bg-secondary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-gray-300 font-medium text-sm dark:bg-secondary dark:hover:bg-gray-700 dark:focus:ring-gray-700 border dark:border-gray-700"
 					onClick={ () => {
+						if (regularImage) {
+							const canvas = document.getElementById('laplacianDrawingCanvas');
+							const ctx = canvas.getContext('2d');
+							ctx.clearRect(0, 0, canvas.width, canvas.height);
+							clearLaplacian();
+							return;
+						}
 						clearDrawing();
 						const canvas = document.getElementById('drawingCanvas');
 						const ctx = canvas.getContext('2d');

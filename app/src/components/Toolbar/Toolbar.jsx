@@ -7,11 +7,11 @@ import Draw from './Draw';
 import Download from './Download';
 
 function Toolbar({ className = '', onClose }) {
-	const { originalImage, resultImage, selectedAlgorithm, reset } = useStore();
+	const { originalImage, resultImage, selectedAlgorithm, reset, regularImage } = useStore();
 
 	return (
-		<div className={ ["flex flex-col bg-secondary w-96 px-4 py-8 space-y-4", className].join(' ') }	>
-			<div className='flex-1 space-y-8'>
+		<div className={ ["flex flex-col bg-secondary w-96 px-4 py-8 space-y-4 overflow-x-hidden overflow-y-auto", className].join(' ') }	>
+			<div className='flex-1 space-y-4'>
 				<div className="flex items-center justify-between gap-4">
 					<div className='flex items-center gap-1 text-gray-400'>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="w-5 aspect-square icon icon-tabler icons-tabler-outline icon-tabler-tool">
@@ -31,7 +31,7 @@ function Toolbar({ className = '', onClose }) {
 				<Algorithms />
 				{ selectedAlgorithm && (
 					<>
-						<Draw />
+						{ ["region_growing", "laplacian_coordinates"].includes(selectedAlgorithm) && <Draw /> }
 						<Attributes />
 						<Run />
 					</>
@@ -42,16 +42,16 @@ function Toolbar({ className = '', onClose }) {
 					) } */}
 					{ resultImage && <Download text="result" filename={ `${originalImage.name.split('.')[0]}_result.nii` } file={ resultImage } /> }
 				</div>
+				{ (!!originalImage || !!regularImage) && (
+					<button
+						className="relative w-full inline-flex items-center justify-center p-[1.5px] mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+						onClick={ reset }>
+						<span className="relative w-full tracking-wider px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-primary rounded-md group-hover:bg-opacity-0">
+							Reset
+						</span>
+					</button>
+				) }
 			</div>
-			{ originalImage && (
-				<button
-					className="relative w-full inline-flex items-center justify-center p-[1.5px] mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-					onClick={ reset }>
-					<span className="relative w-full tracking-wider px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-primary rounded-md group-hover:bg-opacity-0">
-						Reset
-					</span>
-				</button>
-			) }
 		</div>
 	);
 }

@@ -4,16 +4,18 @@ import useStore from '../store';
 import { wait } from '../utils';
 
 function DropZone() {
-	const { setOriginalImage, setOriginalReader } = useStore();
+	const { setOriginalImage, setOriginalReader, setRegularImage } = useStore();
 
 	const handleDrop = (event) => {
 		event.preventDefault();
 		const file = event.dataTransfer.files[0];
+		if (file.type.includes('image')) return setRegularImage(file);
 		setFile(file);
 	};
 
 	const handleFileSelect = async (e) => {
 		let file = e.target.files[0];
+		if (file.type.includes('image')) return setRegularImage(file);
 		setFile(file);
 	};
 
@@ -44,7 +46,7 @@ function DropZone() {
 						<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
 					</svg>
 					<p className="mb-2 text-sm text-gray-300 dadrk:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-					<p className="text-xs text-gray-500 dark:text-gray-400">.NII or .NII.GZ files</p>
+					<p className="text-xs text-gray-500 dark:text-gray-400">.NII or .NII.GZ files. Also regular images for laplacian coordinates</p>
 				</div>
 				<input id="dropzone-file" type="file" className="hidden" onChange={ handleFileSelect } />
 			</label>

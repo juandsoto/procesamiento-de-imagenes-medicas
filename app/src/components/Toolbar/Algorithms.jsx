@@ -3,7 +3,7 @@ import GlowingButton from '../GlowingButton';
 
 function Algorithms() {
 
-	const { isProcessing, originalImage, selectedAlgorithm, setSelectedAlgorithm } = useStore();
+	const { isProcessing, originalImage, selectedAlgorithm, setSelectedAlgorithm, regularImage } = useStore();
 
 	const mustBeDisabled = isProcessing || !originalImage;
 
@@ -64,6 +64,14 @@ function Algorithms() {
 				onClick={ () => setSelectedAlgorithm('image_registration') }
 			>
 				Image registration
+			</GlowingButton>
+			<GlowingButton
+				disabled={ isProcessing || !regularImage }
+				className={ selectedAlgorithm !== 'laplacian_coordinates' ? 'opacity-50' : '' }
+				color="red"
+				onClick={ () => setSelectedAlgorithm('laplacian_coordinates') }
+			>
+				Laplacian coordinates
 			</GlowingButton>
 		</div>
 	);

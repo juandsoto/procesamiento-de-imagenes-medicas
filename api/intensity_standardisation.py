@@ -41,13 +41,10 @@ def z_score(image):
 def white_stripe(image):
     image_data = image.get_fdata()
 
-    # Calculate the histogram of grayscale image
     hist, _ = np.histogram(image_data, bins=256, range=(0, 255))
 
-    # Find the rightmost mode in the histogram
     rightmost_mode = np.argmax(hist[::-1])
 
-    # Divide all intensities by the rightmost mode
     normalized_image = np.array(image_data, dtype=np.float32) / rightmost_mode
 
     return normalized_image
