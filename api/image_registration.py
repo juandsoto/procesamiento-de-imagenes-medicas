@@ -21,7 +21,7 @@ def image_registration(fixed_image, moving_image):
     )
     R.SetOptimizerScalesFromIndexShift()
 
-    tx = sitk.CenteredTransformInitializer(fixed, moving, sitk.Similarity3DTransform())
+    tx = sitk.CenteredTransformInitializer(fixed, moving, sitk.Euler3DTransform())
     R.SetInitialTransform(tx)
 
     R.SetInterpolator(sitk.sitkLinear)
